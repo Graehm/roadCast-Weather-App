@@ -1,21 +1,90 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useGeolocation } from "@uidotdev/usehooks";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const APIKEY = import.meta.env.VITE_REACT_APP_APIKEY
-function App() {
-  const [count, setCount] = useState(0)
-  const state = useGeolocation();
-  console.log(state)
+
+const Weather = () => {
+  const [city, setCity] = useState('');
+  const [weatherData, setWeatherData] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      if(!city) return
+      const apiKey = import.meta.env.VITE_REACT_APP_APIKEY
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+      );
+      setWeatherData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    setCity(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchData();
+  };
 
   return (
     <div>
-      <h1>Road Cast</h1>
-      {APIKEY}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter city name"
+          value={city}
+          onChange={handleInputChange}
+        />
+        <button type="submit">Get Weather</button>
+      </form>
+      {weatherData ? (
+        <>
+          <h2>{weatherData.name}</h2>
+          <p>Temperature: {weatherData.main.temp}°C</p>
+          <p>Description: {weatherData.weather[0].description}</p>
+          <p>Feels like : {weatherData.main.feels_like}°C</p>
+          <p>Humidity : {weatherData.main.humidity}%</p>
+          <p>Wind Speed : {weatherData.wind.speed}m/s</p>
+        </>
+      ) : (
+        <p>Loading weather data...</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default Weather;
+
+
+
+
+//----------------------------------------------------------
+
+// import { useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
+// import './App.css'
+// import { useGeolocation } from "@uidotdev/usehooks";
+
+// const APIKEY = import.meta.env.VITE_REACT_APP_APIKEY
+// function App() {
+//   const [count, setCount] = useState(0)
+//   const state = useGeolocation();
+//   console.log(state)
+
+//   return (
+//     <div>
+//       <h1>Road Cast</h1>
+//       {APIKEY}
+//     </div>
+//   )
+// }
+
+// export default App
