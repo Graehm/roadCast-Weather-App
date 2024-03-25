@@ -44,7 +44,7 @@ const Weather = () => {
           value={city}
           onChange={handleInputChange}
         />
-        <button type="submit">Road Cast Forecast</button>
+        <button type="submit">Get Forecast</button>
       </form>
       {weatherData ? (
         <>
