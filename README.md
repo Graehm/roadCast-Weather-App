@@ -11,3 +11,6 @@ Currently, two official plugins are available:
 
 
 
+next steps 
+1. add iffy for weather temp and humid - make btn for Get Road Cast 
+2. Material Joy UI for auto gen city locater key: value pair for city: State/Country/province etc
